@@ -1,0 +1,15 @@
+<h3><%= @product.name %></h3>
+<p><%= @product.description %></p>
+<p><%= number_to_currency(@product.price) %></p>
+<%= image_tag @product.featured_image.variant(resize_to_limit: [400, 250]) if @product.featured_image.attached? %>
+<div class="button-row">
+    <%= link_to "Edit", edit_product_path(@product), class: "btn btn-primary" if authenticated?%>
+   <%= button_to "Delete", product_path(@product), method: :delete, data: { turbo_confirm: "Are you sure?" } ,class:"btn btn-danger" if authenticated?%>
+  <%@reviews.each do |review|%>
+  <p >Comment: <%= review.comment%> ** Rating: <%=review.rating%></p>
+  <p></p>
+  <%end%>
+  <br>
+   <%= link_to "Add Review", new_product_review_path(@product), class: "btn btn-primary" if authenticated?%>
+</div>
+<%= link_to "Back to Products", products_path, class: "btn btn-secondary" %>

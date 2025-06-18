@@ -1,2 +1,65 @@
 class ProductsController < ApplicationController
+  allow_unauthenticated_access only: %i[index show]
+  before_action :set_category, only: %i[create]
+  def index
+    @products = Product.all
+  end
+  def new
+    @product = Product.new
+  end
+  def create
+    @category = Category.find_by(name: params[:product][:category_id]) if params[:product][:category_id].present?
+    params[:product][:category_id] = @category.id if @category.present?
+    @product = Product.new(product_params)
+    if @product.save
+      redirect_to products_path, notice: "Product added succesfully"
+    else
+      render :new
+      flash.now[:alert] = "Failed to add product"
+      flash.now[:alert] = @product.errors.full_messages.join(", ")
+    end
+  end
+  def show
+    @product = Product.find(params[:id])
+    @reviews=@product.reviews
+  end
+  def destroy
+    @product= Product.find(params[:id])
+    puts "Attempting to destroy product with ID: #{@product.id}"
+    puts "Product details: #{@product.inspect}"
+    if @product.destroy
+
+      redirect_to products_path, notice: "Product deleted Successfully"
+    else
+      redirect_to products_path, notice: "Product deletion failed"
+    end
+  end
+  def edit
+     @product=Product.find_by(params[:id])
+  end
+
+  def update
+     @product=Product.find_by(params[:id])
+     @category = Category.find_by(id: params[:product][:category_id]) if params[:product][:category_id].present?
+     @product[:category_id]=@category.name
+    if session[:user_id]==@product.user_id
+      if @product.update(product_params)
+        redirect_to @product
+      else
+         render :edit, status: :unprocessable_entity
+      end
+    end
+  end
+
+  private
+  def set_category
+    puts "Setting category based on params: #{params[:product][:category_id].inspect}"
+    @category = Category.find_by(name: params[:product][:category_id]) if params[:product][:category_id].present?
+    puts "Category found: #{@category.inspect}" if @category.present?
+    params[:product][:category_id] = @category.id if @category.present?
+    params[:product][:user_id]= session[:user_id] if session[:user_id].present?
+  end
+  def product_params
+    params.require(:product).permit(:name, :description, :price, :featured_image, :category_id, :user_id)
+  end
 end
