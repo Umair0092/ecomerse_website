@@ -20,11 +20,11 @@ class ProductsController < ApplicationController
     end
   end
   def show
-    @product = Product.find(params[:id])
+    @product = Product.where("id=?", params[:id])
     @reviews=@product.reviews
   end
   def destroy
-    @product= Product.find(params[:id])
+    @product = Product.where("id=?", params[:id])
     puts "Attempting to destroy product with ID: #{@product.id}"
     puts "Product details: #{@product.inspect}"
     if @product.destroy
@@ -35,7 +35,7 @@ class ProductsController < ApplicationController
     end
   end
   def edit
-     @product=Product.find_by(params[:id])
+     @product=Product.where("id=?", params[:id])
   end
 
   def update

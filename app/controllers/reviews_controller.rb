@@ -11,11 +11,11 @@ class ReviewsController < ApplicationController
   end
 
   def edit
-     @review=Review.find_by(params[:id])
+     @review=Review.where("id=?", params[:id])
   end
 
   def update
-     @review=Review.find_by(params[:id])
+    @review=Review.where("id=?", params[:id])
     if session[:user_id]==@review.user_id
       if @review.update(set_params)
         redirect_to @review
