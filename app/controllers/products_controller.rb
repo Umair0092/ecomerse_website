@@ -39,7 +39,7 @@ class ProductsController < ApplicationController
   end
 
   def update
-     @product=Product.find_by(params[:id])
+    @product=Product.where("id=?", params[:id])
      @category = Category.find_by(id: params[:product][:category_id]) if params[:product][:category_id].present?
      @product[:category_id]=@category.name
     if session[:user_id]==@product.user_id
