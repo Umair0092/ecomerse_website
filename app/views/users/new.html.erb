@@ -1,0 +1,26 @@
+<div class="container mt-5">
+  <% if flash[:notice] %>
+    <div class="alert alert-success"><%= flash[:notice] %></div>
+  <% elsif flash[:alert] %>
+    <div class="alert alert-danger"><%= flash[:alert] %></div>
+  <% end %>
+
+  <div class="card mx-auto" style="max-width: 480px;">
+    <div class="card-body">
+      <h2 class="card-title mb-4 text-center">Sign Up</h2>
+
+      <%= form_with model: @user, url: users_path do |f| %>
+        <%= f.email_field :email_address, label: 'Email', required: true,
+                  placeholder: 'you@example.com', input_html: { autofocus: true } %>
+
+        <%= f.password_field :password, label: 'Password', required: true,
+                  placeholder: 'Enter a password' %>
+
+        <%= f.password_field :password_confirmation, label: 'Confirm Password', required: true,
+                  placeholder: 'Repeat your password' %>
+
+        <%= f.submit 'Sign Up', class: 'btn btn-primary w-100 mt-3' %>
+      <% end %>
+    </div>
+  </div>
+</div>

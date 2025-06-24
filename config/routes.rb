@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   root "products#index"
   shallow do
     resources :products do
-     resources :reviews
+      resources :reviews
     end
   end
 
@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     resources :cart, only: [ :show, :create, :update, :destroy ]
     resources :orders
   end
-  
+
   # root "products#index"
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

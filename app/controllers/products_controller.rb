@@ -2,7 +2,13 @@ class ProductsController < ApplicationController
   allow_unauthenticated_access only: %i[index show]
   before_action :set_category, only: %i[create]
   def index
-    @products = Product.all
+    puts params[:query]
+    if params[:query].present?
+       @products=Product.where("name=?", params[:query])
+
+    else
+       @products = Product.all
+    end
   end
   def new
     @product = Product.new
@@ -12,19 +18,17 @@ class ProductsController < ApplicationController
     params[:product][:category_id] = @category.id if @category.present?
     @product = Product.new(product_params)
     if @product.save
-      redirect_to products_path, notice: "Product added succesfully"
+      redirect_to products_path, success: "Product Added successfully"
     else
-      render :new
-      flash.now[:alert] = "Failed to add product"
-      flash.now[:alert] = @product.errors.full_messages.join(", ")
+      render :new, error: "Failed to add product"
     end
   end
   def show
-    @product = Product.where("id=?", params[:id])
+    @product = Product.find(params[:id])
     @reviews=@product.reviews
   end
   def destroy
-    @product = Product.where("id=?", params[:id])
+    @product = Product.find(params[:id])
     puts "Attempting to destroy product with ID: #{@product.id}"
     puts "Product details: #{@product.inspect}"
     if @product.destroy
@@ -35,14 +39,14 @@ class ProductsController < ApplicationController
     end
   end
   def edit
-     @product=Product.where("id=?", params[:id])
+   @product = Product.find(params[:id])
   end
 
   def update
-    @product=Product.where("id=?", params[:id])
+    @product = Product.find(params[:id])
      @category = Category.find_by(id: params[:product][:category_id]) if params[:product][:category_id].present?
      @product[:category_id]=@category.name
-    if session[:user_id]==@product.user_id
+    if Current.session[:user_id]==@product.user_id
       if @product.update(product_params)
         redirect_to @product
       else

@@ -7,7 +7,7 @@ class CreateBooks < ActiveRecord::Migration[8.0]
     create_table :books do |t|
       t.string :name
       t.datetime :published_at
-      t.references :books, :author, null: false, foreign_key: true, index: true
+      t.references :book, :author, null: false, foreign_key: true, index: true
       t.timestamps
     end
   end

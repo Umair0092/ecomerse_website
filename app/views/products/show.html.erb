@@ -1,15 +1,65 @@
-<h3><%= @product.name %></h3>
-<p><%= @product.description %></p>
-<p><%= number_to_currency(@product.price) %></p>
-<%= image_tag @product.featured_image.variant(resize_to_limit: [400, 250]) if @product.featured_image.attached? %>
-<div class="button-row">
-    <%= link_to "Edit", edit_product_path(@product), class: "btn btn-primary" if authenticated?%>
-   <%= button_to "Delete", product_path(@product), method: :delete, data: { turbo_confirm: "Are you sure?" } ,class:"btn btn-danger" if authenticated?%>
-  <%@reviews.each do |review|%>
-  <p >Comment: <%= review.comment%> ** Rating: <%=review.rating%></p>
-  <p></p>
-  <%end%>
-  <br>
-   <%= link_to "Add Review", new_product_review_path(@product), class: "btn btn-primary" if authenticated?%>
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-6">
+      <% if @product.featured_image.attached? %>
+        <%= image_tag @product.featured_image.variant(resize_to_limit: [600, 400]),
+                       class: "img-fluid rounded mb-3",
+                       alt: @product.name %>
+      <% else %>
+        <div class="bg-light rounded mb-3 d-flex align-items-center justify-content-center" style="height: 400px;">
+          No Image
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-md-6 d-flex flex-column">
+      <h2 class="display-5"><%= @product.name %></h2>
+      <h4 class="text-primary mb-3"><%= number_to_currency(@product.price) %></h4>
+      <p class="lead"><%= @product.description %></p>
+
+      <div class="mt-auto mb-3">
+        <% if authenticated? %>
+          <%= link_to "Edit", edit_product_path(@product), class: "btn btn-outline-primary me-2" %>
+          <%= button_to "Delete", product_path(@product),
+                        method: :delete,
+                        data: { turbo_confirm: "Are you sure?" },
+                        class: "btn btn-outline-danger" %>
+        <% end %>
+        <%= link_to "Back to Products", products_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="reviews-section mt-4">
+    <h3>Reviews</h3>
+    <% if @reviews != nil %>
+      <% @reviews.each do |review| %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <p class="card-text"><strong>Rating:</strong> <%= review.rating %> / 5</p>
+            <p class="card-text"><%= review.comment %></p>
+            <%if Current.session.present? %>
+            <% if review.user_id == Current.session[:user_id] && authenticated? %>
+              <div class="text-end">
+
+                <%= button_to "Delete Review", review_path(review),
+                              method: :delete,
+                              data: { turbo_confirm: "Delete this review?" },
+                              class: "btn btn-sm btn-danger" %>
+              </div>
+            <% end %>
+            <%end%>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <p>No reviews yet. Be the first to <%= link_to "add one", new_product_review_path(@product) %>!</p>
+    <% end %>
+
+    <% if authenticated? %>
+      <%= link_to "Add Review", new_product_review_path(@product), class: "btn btn-primary" %>
+    <% end %>
+  </div>
 </div>
-<%= link_to "Back to Products", products_path, class: "btn btn-secondary" %>

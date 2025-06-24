@@ -1,0 +1,14 @@
+<% flash.each do |type, message| %>
+  <%# Map rails keys to Bootstrap alert classes %>
+  <% bs_class = case type.to_sym
+       when :notice then "alert-info"
+       when :alert  then "alert-warning"
+       when :success then "alert-success"
+       when :error  then "alert-danger"
+       else "alert-primary"
+     end %>
+  <div class="alert <%= bs_class %> alert-dismissible fade show" role="alert">
+    <%= message %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>

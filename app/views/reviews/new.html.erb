@@ -1,0 +1,27 @@
+<div class="container mt-5">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Add New Review</h4>
+      <%= link_to "Back to Products", product_path(@product), class: "btn btn-light btn-sm" %>
+    </div>
+
+    <div class="card-body">
+      <%= form_with(model: [@product, @review], local: true, html: { multipart: true }) do |form| %>
+        <div class="mb-3">
+          <%= form.label :comment, class: "form-label fw-bold" %>
+          <%= form.text_area :comment, class: "form-control", rows: 3, required: true, placeholder: "Write your review here..." %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :rating, class: "form-label fw-bold" %>
+          <%= form.number_field :rating, class: "form-control", step: 1, min: 0, max: 5, required: true, placeholder: "Rate from 0 to 5" %>
+        </div>
+
+        <div class="d-flex justify-content-end">
+          <%= form.submit "Create Review", class: "btn btn-success me-2" %>
+          <%= link_to "Cancel", product_path(@product), class: "btn btn-secondary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

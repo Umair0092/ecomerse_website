@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_19_063421) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_23_091220) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -59,15 +59,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_063421) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "authors_books", id: false, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "book_id", null: false
+    t.bigint "author_id", null: false
+    t.index ["book_id", "author_id"], name: "index_authors_books_on_book_id_and_author_id"
+  end
+
   create_table "books", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.datetime "published_at"
-    t.bigint "books_id", null: false
     t.bigint "author_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_books_on_author_id"
-    t.index ["books_id"], name: "index_books_on_books_id"
   end
 
   create_table "cart_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -125,23 +129,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_063421) do
   create_table "products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.decimal "price", precision: 10
     t.integer "stock_quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "category_id", null: false
     t.bigint "user_id", null: false
+    t.decimal "price", precision: 5, scale: 2
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["user_id"], name: "index_products_on_user_id"
   end
 
+  create_table "ps", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", options: "ENGINE=BLACKHOLE", force: :cascade do |t|
+    t.string "name", null: false
+  end
+
   create_table "reviews", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "product_id", null: false
     t.text "comment"
     t.integer "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "product_id", null: false
     t.index ["product_id"], name: "index_reviews_on_product_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
   end
@@ -181,7 +189,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_063421) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "addresses", "users"
   add_foreign_key "books", "authors"
-  add_foreign_key "books", "books", column: "books_id"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "products"
   add_foreign_key "carts", "users"
