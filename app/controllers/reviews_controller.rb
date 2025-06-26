@@ -10,13 +10,23 @@ class ReviewsController < ApplicationController
   end
   def create
     @product=Product.find_by(id: params[:product_id])
-    params[:review][:user_id]=Current.session[:user_id] if session[:user_id].present?
+    puts "User_id:#{Current.session[:user_id]}"
+    params[:review][:user_id]=Current.session[:user_id] if Current.session[:user_id].present?
     params[:review][:product_id]=params[:product_id]
-    puts params[:user_id]
+    puts "params user_id #{params[:review][:user_id]}"
 
+    @review = Review.new(set_params)
+     respond_to do |format|
+       if @review.save
+         format.turbo_stream
+         format.html { redirect_to @product, notice: "Review added successfully" }
+       else
+           redirect_to product_path(@product), success: "Review Added successfully"
+       end
+     end
+     flash.now[:alert] = @review.errors.full_messages.join(", ")
+     puts @review.errors.full_messages.join(", ")
 
-    @review = Review.create!(set_params)
-    redirect_to product_path(@product), success: "Review Added successfully"
 
     # if @review.save
     # redirect_to product_path(@product), notice: "Product added succesfully"
@@ -53,6 +63,6 @@ class ReviewsController < ApplicationController
   end
   private
   def set_params
-    params.require(:review).permit(:id, :user_id, :product_id, :comment, :rating)
+    params.require(:review).permit(:user_id, :product_id, :comment, :rating)
   end
 end

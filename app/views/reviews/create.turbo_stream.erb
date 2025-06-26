@@ -1,0 +1,5 @@
+<!-- app/views/reviews/create.turbo_stream.erb -->
+
+<%= turbo_stream.append "reviews", partial: "reviews/review", locals: { review: @review } %>
+
+<%= turbo_stream.replace "new_review", partial: "reviews/form", locals: { product: @product, review: Review.new } %>

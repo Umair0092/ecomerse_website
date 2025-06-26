@@ -34,32 +34,23 @@
 
   <div class="reviews-section mt-4">
     <h3>Reviews</h3>
-    <% if @reviews != nil %>
-      <% @reviews.each do |review| %>
-        <div class="card mb-3">
-          <div class="card-body">
-            <p class="card-text"><strong>Rating:</strong> <%= review.rating %> / 5</p>
-            <p class="card-text"><%= review.comment %></p>
-            <%if Current.session.present? %>
-            <% if review.user_id == Current.session[:user_id] && authenticated? %>
-              <div class="text-end">
+<%= turbo_stream_from @product %> <!-- Turbo listens for broadcasts -->
 
-                <%= button_to "Delete Review", review_path(review),
-                              method: :delete,
-                              data: { turbo_confirm: "Delete this review?" },
-                              class: "btn btn-sm btn-danger" %>
-              </div>
-            <% end %>
-            <%end%>
-          </div>
-        </div>
-      <% end %>
+
+    <% if @product.reviews != nil %>
+    <div id="reviews">
+      <%= render @product.reviews%>
+    </div>
+      
     <% else %>
       <p>No reviews yet. Be the first to <%= link_to "add one", new_product_review_path(@product) %>!</p>
     <% end %>
 
     <% if authenticated? %>
-      <%= link_to "Add Review", new_product_review_path(@product), class: "btn btn-primary" %>
+        <%= turbo_frame_tag "new_review" do %>
+        <%= render "reviews/form", product: @product, review: Review.new %>
+           <% end %>
+      <%#link_to "Add Review", new_product_review_path(@product), class: "btn btn-primary" -%>
     <% end %>
   </div>
 </div>

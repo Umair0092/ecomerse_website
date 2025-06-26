@@ -1,6 +1,7 @@
 <h1>Reviews</h1> 
     
 <div class="products-grid">
+  <%if @reviews!= nil%>
   <% @reviews.each do |review| %>
     <div class="product-card">
       <% if product.featured_image.attached? %>
