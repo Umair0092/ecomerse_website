@@ -1,36 +1,10 @@
+<%=turbo_frame_tag "main_page" do%>
 <div class="custom-container">
   <div class="custom-card">
     <div class="custom-card-header">
       <h2>Add New Product</h2>
     </div>
-    <div class="custom-card-body">
-      <%= form_with(model: @product, local: true, html: { class: "custom-form", multipart: true }) do |form| %>
-        <div class="custom-form-group">
-          <%= form.label :name, class: "custom-label" %>
-          <%= form.text_field :name, class: "custom-input", required: true, autofocus: true %>
-        </div>
-        <div class="custom-form-group">
-          <%= form.label :description, class: "custom-label" %>
-          <%= form.text_area :description, class: "custom-input", rows: 3, required: true %>
-        </div>
-        <div class="custom-form-group">
-          <%= form.label :price, class: "custom-label" %>
-          <%= form.number_field :price, class: "custom-input", step: 0.01, min: 0, required: true %>
-        </div>
-        <div class="custom-form-group">
-          <%= form.label :featured_image, "Product Image", class: "custom-label" %>
-          <%= form.file_field :featured_image, class: "custom-input" %>
-        </div>
-         
-        <div class="custom-form-group">
-          <%= form.label :category_id,"category",class:"custom-label"%>
-          <%= form.text_field :category_id,class: "custom-input",rows:1,required: true%>
-        </div>
-        <div class="custom-form-actions">
-          <%= form.submit "Create Product", class: "custom-btn custom-btn-primary" %>
-          <%= link_to "Cancel", products_path, class: "custom-btn custom-btn-secondary" %>
-        </div>
-      <% end %>
-    </div>
+       <%= render "form",locals: {product: @product}%>
   </div>
 </div>
+<%end%>

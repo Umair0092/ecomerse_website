@@ -19,7 +19,7 @@ class ReviewsController < ApplicationController
      respond_to do |format|
        if @review.save
          format.turbo_stream
-         format.html { redirect_to @product, notice: "Review added successfully" }
+         format.html { redirect_to @product, success: "Review added successfully" }
        else
            redirect_to product_path(@product), success: "Review Added successfully"
        end
@@ -52,13 +52,17 @@ class ReviewsController < ApplicationController
       end
     end
   end
+
   def destroy
     @review = Review.find(params[:id])
-    if @review.destroy
-
-      redirect_to root_path, method: :show, notice: "Review Deleted Successfully "
-    else
+    respond_to do |format|
+       if @review.destroy
+       format.turbo_stream
+       format.html { redirect_to product_path(@review.product), method: :show, notice: "Review Deleted Successfully " }
+       # redirect_to root_path, method: :show, notice: "Review Deleted Successfully "
+       else
       redirect_to products_path, notice: "Review deletion failed"
+       end
     end
   end
   private

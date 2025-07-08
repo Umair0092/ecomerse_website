@@ -8,6 +8,7 @@ class UsersController < ApplicationController
   def create
     @user= User.create!(set_params)
     if @user.save
+      # UserMailer.with(user: @user).welcome_email.deliver_later
       start_new_session_for @user
       redirect_to root_path, notice: "Account Created added succesfully"
     else

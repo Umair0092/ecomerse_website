@@ -9,13 +9,15 @@ class ProductsController < ApplicationController
     else
        @products = Product.all
     end
+    
   end
   def new
     @product = Product.new
   end
   def create
-    @category = Category.find_by(name: params[:product][:category_id]) if params[:product][:category_id].present?
-    params[:product][:category_id] = @category.id if @category.present?
+    #puts "#{params[cat]}"
+    # @category = Category.find_by(name: params[:product][:category_id]) if params[:product][:category_id].present?
+    # params[:product][:category_id] = @category.id if @category.present?
     @product = Product.new(product_params)
     @product.valid?
      puts "Errors inn creation: #{@product.errors.full_messages.join(", ")}"

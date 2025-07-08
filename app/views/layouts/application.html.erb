@@ -20,7 +20,9 @@
   </head>
 
   <body class="d-flex flex-column min-vh-100">
-    
+    <% flash.each do |name, msg| -%>
+      <%= content_tag :div, msg, class: name %>
+    <% end -%>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
       <div class="container">

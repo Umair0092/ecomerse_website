@@ -1,0 +1,43 @@
+<div class="custom-card-body">
+  <%= form_with(model: @product, local: true, html: { class: "custom-form", multipart: true }) do |form| %>
+    
+    
+    <div class="custom-form-group mb-3">
+      <%= form.label :name, class: "custom-label fw-bold" %>
+      <%= form.text_field :name, class: "custom-input form-control", required: true, autofocus: true %>
+    </div>
+
+    
+    <div class="custom-form-group mb-3">
+      <%= form.label :description, class: "custom-label fw-bold" %>
+      <%= form.text_area :description, class: "custom-input form-control", rows: 3, required: true %>
+    </div>
+
+    
+    <div class="custom-form-group mb-3">
+      <%= form.label :price, class: "custom-label fw-bold" %>
+      <%= form.number_field :price, class: "custom-input form-control", step: 0.01, min: 0, required: true %>
+    </div>
+
+    
+    <div class="custom-form-group mb-3">
+      <%= form.label :featured_image, "Product Image", class: "custom-label fw-bold" %>
+      <%= form.file_field :featured_image, class: "custom-input form-control" %>
+    </div>
+
+    
+    <div class="custom-form-group mb-4">
+      <%= form.label :category_id, "Category", class: "custom-label fw-bold" %>
+      <!-- form.text_field :category_id, class: "custom-input form-control", required: true -->
+      <%= form.collection_select :category_id, Category.order(:name), :id, :name ,class:"custom-input form-control"%>
+    </div>
+
+   
+    <div class="custom-form-actions d-flex justify-content-end">
+      <%= form.submit "Create Product", class: "custom-btn custom-btn-primary me-2 btn btn-success" if !@product.persisted?%>
+       <%= form.submit "Update Product", class: "custom-btn custom-btn-primary me-2 btn btn-success" if @product.persisted?%>
+      <%= link_to "Cancel", products_path, data: { turbo_frame: "main_page" }, class: "custom-btn custom-btn-secondary btn btn-secondary" %>
+    </div>
+
+  <% end %>
+</div>

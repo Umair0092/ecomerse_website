@@ -1,5 +1,6 @@
+<%=turbo_frame_tag "main_page" do%>
 <h1>Products</h1>
-<%= link_to 'New Product', new_product_path, class: 'btn btn-primary mb-3' if authenticated? %>
+<%= link_to 'New Product', new_product_path,data:{turbo_frame:"main_page"},class: 'btn btn-primary mb-3' if authenticated? %>
 
 <div class="container">
   <div class="row g-4">
@@ -20,7 +21,7 @@
             <p class="card-text text-truncate"><%= product.description %></p>
             <p class="card-text fw-bold"><%= number_to_currency(product.price) %></p>
             <div class="mt-auto text-center">
-              <%= link_to "Show", product_path(product),
+              <%= link_to "Show", product_path(product),data:{turbo_frame:"main_page"},
                            class: "btn btn-info btn-sm" %>
             </div>
           </div>
@@ -29,3 +30,4 @@
     <% end %>
   </div>
 </div>
+<%end%>
